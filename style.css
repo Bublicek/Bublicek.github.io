@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h1 {
+    color: #333;
+}
+
+.input-table {
+    border-collapse: collapse;
+    margin: 20px;
+}
+
+.input-table td {
+    border: 1px solid #4CAF50; /* Green border */
+    padding: 15px;
+    text-align: center;
+}
+
+.input-table input {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.input-table input:focus {
+    outline: none; /* Remove outline on focus */
+    border: 2px solid #4CAF50; /* Green border on focus */
+}
+
+#submit-btn {
+    padding: 10px 20px
