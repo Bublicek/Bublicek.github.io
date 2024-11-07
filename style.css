@@ -13,28 +13,43 @@ h1 {
     color: #333;
 }
 
-.input-table {
-    border-collapse: collapse;
+.board {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr 1fr 1fr;
+    gap: 5px;
+    width: 250px;
     margin: 20px;
 }
 
-.input-table td {
-    border: 1px solid #4CAF50; /* Green border */
-    padding: 15px;
-    text-align: center;
-}
-
-.input-table input {
-    width: 100%;
-    border: none;
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    background-color: #e0e0e0;
     padding: 10px;
-    border-radius: 4px;
 }
 
-.input-table input:focus {
-    outline: none; /* Remove outline on focus */
-    border: 2px solid #4CAF50; /* Green border on focus */
+.cell {
+    width: 80px;
+    height: 50px;
+    text-align: center;
+    font-size: 16px;
+    border: 1px solid #4CAF50;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.feedback {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #4CAF50;
 }
 
 #submit-btn {
-    padding: 10px 20px
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+}
