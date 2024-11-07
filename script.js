@@ -1,53 +1,39 @@
-// Sample correct answers where each index contains an array of valid answers
-const correctAnswers = [
-    ['Nadal', 'Shelton', "Gasquet",], // Answers for Input 1
-    ['Player B'],              // Answer for Input 2
-    ['Player C', 'Player Y'], // Answers for Input 3
-    ['Player D'],              // Answer for Input 4
-    ['Player E'],              // Answer for Input 5
-    ['Player F'],              // Answer for Input 6
-    ['Player G'],              // Answer for Input 7
-    ['Player H'],              // Answer for Input 8
-    ['Player I']               // Answer for Input 9
-];
+// Define the correct answers based on row and column criteria for each cell
+const correctAnswers = {
+    "cell-1-1": ["Nadal"],    // Example: Left-handed players winners of 1000 masters
+    "cell-1-2": ["Nadal", "Djokovic", "Thiem", "Medvedev", "Alcaraz", "Sinner", "Wawrinka", "Cilic"], // Example: Grand slam winner, 1000 masters winner
+    "cell-1-3": ["Zverev"],              // Example: German winners of 1000 masters
+    "cell-2-1": ["Humbert", "Draper", "Shelton", "Tabilo", "Shang", "Mannarino", "Norrie", "Acosta", "Moutet", "Nishioka", "Gaston", "Koepfer", "Monteiro"],              // Example: Left-handed top 100, both-handed BH
+    "cell-2-2": ["Djokovic", "Thiem", "Medvedev", "Alcaraz", "Sinner", "Wawrinka", "Cilic"],           // Example: GS winner, both-hands BH
+    "cell-2-3": ["Zverev", "Struff", "Koepfer", "Hanfmann"],               // Example: German, both-hands BH
+    "cell-3-1": ["Humbert", "Draper", "Shelton", "Tabilo", "Shang", "Mannarino", "Norrie", "Acosta", "Moutet", "Nishioka", "Shapovalov", "Gaston", "Koepfer", "Monteiro" ],           // Example: Current top 100, left-handed
+    "cell-3-2": ["Djokovic", "Medvedev", "Alcaraz", "Sinner"],               // Example: Current top 100, GS winner
+    "cell-3-3": ["Zverev", "Struff", "Koepfer", "Hanfmann", "Altmaier"]       // Example: Current top 100, German
+};
 
-const feedback = document.querySelector('.feedback'); // Feedback div
-const submitBtn = document.getElementById('submit-btn'); // Submit button
+// Feedback div
+const feedback = document.querySelector('.feedback');
+const submitBtn = document.getElementById('submit-btn');
 
+// Event listener for Submit button
 submitBtn.addEventListener('click', () => {
-    const inputs = document.querySelectorAll('.input-table input');
-    let score = 0; // Initialize score
     let feedbackMessage = '';
+    let score = 0;
 
-    inputs.forEach((input, index) => {
-        // Split the input value by commas and trim whitespace
-        const userAnswers = input.value.split(',').map(answer => answer.trim());
-        const correctSet = new Set(correctAnswers[index]); // Create a set of correct answers for easier checking
+    // Loop through each cell to check the player’s answer
+    document.querySelectorAll('.cell').forEach(cell => {
+        const cellId = cell.id;
+        const answer = cell.value.trim(); // Get the answer typed in by the player
 
-        userAnswers.forEach(userAnswer => {
-            // Check if the user's answer is in the correct answers
-            if (correctSet.has(userAnswer)) {
-                score += 10; // Increase score for correct answer
-                feedbackMessage += `Correct: ${userAnswer}\n`;
-            } else {
-                feedbackMessage += `Wrong: ${userAnswer}. Correct options were: ${correctAnswers[index].join(', ')}\n`;
-            }
-        });
+        // Check if the answer is in the list of correct answers for that cell
+        if (correctAnswers[cellId].includes(answer)) {
+            feedbackMessage += `Cell ${cellId}: Correct! "${answer}"\n`;
+            score++;
+        } else {
+            feedbackMessage += `Cell ${cellId}: Incorrect. Try again.\n`;
+        }
     });
 
-    feedback.textContent = `Score: ${score}\n${feedbackMessage}`;
-    feedback.style.display = 'block'; // Show feedback
-    // Remove the setTimeout to keep the feedback displayed
+    feedback.textContent = `Score: ${score} / 9\n${feedbackMessage}`;
+    feedback.style.display = 'block';
 });
-
-// Add a reset function to clear inputs and reset the game as needed
-function resetGame() {
-    const inputs = document.querySelectorAll('.input-table input');
-    inputs.forEach(input => {
-        input.value = ''; // Clear each input
-    });
-    feedback.style.display = 'none'; // Hide feedback when resetting
-    feedback.textContent = ''; // Clear feedback text
-}
-
-// Optional: You can call resetGame() at some point to reset the game manually
