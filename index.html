@@ -8,30 +8,29 @@
 </head>
 <body>
     <h1>Tennis Grid Game</h1>
-    <p>Type an active player name that fits both the row and column criteria.</p>
+    <p>Type a player's name to see suggestions and select a matching name.</p>
     <div class="board">
-        <div class="header"></div> <!-- Empty cell for alignment -->
+        <div class="header"></div>
         <div class="header">Left-handed player</div>
         <div class="header">Grand Slam winner</div>
         <div class="header">German player</div>
 
         <div class="header">Winner of 1000 Masters</div>
-        <input class="cell" id="cell-1-1" type="text" placeholder="Answer">
-        <input class="cell" id="cell-1-2" type="text" placeholder="Answer">
-        <input class="cell" id="cell-1-3" type="text" placeholder="Answer">
+        <div class="autocomplete" id="cell-1-1"></div>
+        <div class="autocomplete" id="cell-1-2"></div>
+        <div class="autocomplete" id="cell-1-3"></div>
 
         <div class="header">Both-handed backhand top 100</div>
-        <input class="cell" id="cell-2-1" type="text" placeholder="Answer">
-        <input class="cell" id="cell-2-2" type="text" placeholder="Answer">
-        <input class="cell" id="cell-2-3" type="text" placeholder="Answer">
+        <div class="autocomplete" id="cell-2-1"></div>
+        <div class="autocomplete" id="cell-2-2"></div>
+        <div class="autocomplete" id="cell-2-3"></div>
 
         <div class="header">Top 100 player</div>
-        <input class="cell" id="cell-3-1" type="text" placeholder="Answer">
-        <input class="cell" id="cell-3-2" type="text" placeholder="Answer">
-        <input class="cell" id="cell-3-3" type="text" placeholder="Answer">
+        <div class="autocomplete" id="cell-3-1"></div>
+        <div class="autocomplete" id="cell-3-2"></div>
+        <div class="autocomplete" id="cell-3-3"></div>
     </div>
 
-    <button id="submit-btn">Check Answers</button>
     <div class="feedback"></div>
 
     <script src="script.js"></script>
