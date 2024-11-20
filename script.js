@@ -12,8 +12,7 @@ const correctAnswers = {
 };
 
 // Define the list of all possible player names
-const allPlayers = [
-    "Jannik Sinner", "Alexander Zverev", "Carlos Alcaraz", "Daniil Medvedev", "Taylor Fritz",
+const allPlayers = ["Jannik Sinner", "Alexander Zverev", "Carlos Alcaraz", "Daniil Medvedev", "Taylor Fritz",
     "Novak Djoković", "Casper Ruud", "Andrey Rublev", "Alex de Minaur", "Grigor Dimitrov",
     "Stefanos Tsitsipas", "Tommy Paul", "Holger Rune", "Ugo Humbert", "Jack Draper",
     "Hubert Hurkacz", "Lorenzo Musetti", "Frances Tiafoe", "Karen Khachanov", "Arthur Fils",
@@ -264,75 +263,105 @@ const allPlayers = [
     "Sebastian Prechtel", "Tomas Curras Abasolo", "Mark Whitehouse", "Guy Den Heijer", 
     "Rafael Tosetto", "Sean Hess", "Lasse Poertner", "Daniel Khazime", 
     "Pablo Trochu", "Koki Matsuda", "Charlie Camus", "Mohamed Nazim Makhlouf", 
-    "Steve Johnson"
-];
+    "Steve Johnson"];
 
 // Feedback div
 const feedback = document.querySelector('.feedback');
 
+// Set to keep track of used names
+const usedNames = new Set();
+
+// Overlay and popup input elements
+const overlay = document.createElement('div');
+overlay.classList.add('overlay');
+document.body.appendChild(overlay);
+
+const popupInput = document.createElement('div');
+popupInput.classList.add('popup-input');
+popupInput.innerHTML = `<input type="text" id="nameInput" placeholder="Type a name...">`;
+overlay.appendChild(popupInput);
+const nameInput = document.getElementById('nameInput');
+
+const autocompleteList = document.createElement('div');
+autocompleteList.classList.add('autocomplete-list');
+popupInput.appendChild(autocompleteList);
+
+let activeCell = null; // Track the active cell being edited
+
 // Populate each cell with an input field and autocomplete functionality
-// Function to populate each cell with an input field and autocomplete functionality
 document.querySelectorAll('.autocomplete').forEach(cell => {
     const input = document.createElement('input');
     input.setAttribute('type', 'text');
-    input.setAttribute('placeholder', 'Start typing...');
+    input.setAttribute('placeholder', '');
     input.classList.add('cell');
-
-    const autocompleteList = document.createElement('div');
-    autocompleteList.classList.add('autocomplete-list');
-
     cell.appendChild(input);
-    cell.appendChild(autocompleteList);
 
-    // Event listener for input to show suggestions
-    input.addEventListener('input', () => {
-        const query = input.value.toLowerCase().trim();
-        autocompleteList.innerHTML = ''; // Clear previous suggestions
-
-        if (query.length >= 2) { // Only show suggestions after 2 letters
-            const suggestions = allPlayers.filter(player =>
-                player.toLowerCase().includes(query) // Match any part of the name
-            );
-
-            // Display filtered suggestions
-            suggestions.forEach(player => {
-                const option = document.createElement('div');
-                option.textContent = player;
-                option.classList.add('autocomplete-option');
-
-                // Click event to select the suggestion
-                option.addEventListener('click', () => {
-                    input.value = player;
-                    autocompleteList.innerHTML = ''; // Clear suggestions
-                    validateSelection(cell.id, player); // Validate selection
-                });
-
-                autocompleteList.appendChild(option);
-            });
-        }
+    // Show overlay and input when a cell is clicked
+    input.addEventListener('click', (event) => {
+        overlay.style.display = 'flex';
+        popupInput.style.display = 'block';
+        nameInput.value = input.value; // Set popup input to cell's current value
+        activeCell = input; // Track the cell
+        nameInput.focus();
     });
 });
 
+// Event listener for name input to show suggestions
+nameInput.addEventListener('input', () => {
+    const query = nameInput.value.toLowerCase().trim();
+    autocompleteList.innerHTML = ''; // Clear previous suggestions
+
+    if (query.length >= 2) {
+        const suggestions = allPlayers.filter(player =>
+            player.toLowerCase().includes(query)
+        );
+
+        suggestions.forEach(player => {
+            const option = document.createElement('div');
+            option.textContent = player;
+            option.classList.add('autocomplete-option');
+
+            option.addEventListener('click', () => {
+                if (usedNames.has(player)) {
+                    alert("This player name has already been used in another cell.");
+                    return;
+                }
+                activeCell.value = player;
+                usedNames.add(player);
+                overlay.style.display = 'none'; // Close overlay
+                popupInput.style.display = 'none'; // Hide popup
+                validateSelection(activeCell.parentNode.id, player);
+            });
+
+            autocompleteList.appendChild(option);
+        });
+    }
+});
+
+// Hide overlay when clicking outside popup
+overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) {
+        overlay.style.display = 'none';
+        popupInput.style.display = 'none';
+        autocompleteList.innerHTML = '';
+        activeCell = null;
+        nameInput.value = '';
+    }
+});
 
 // Function to validate a cell’s selection
 function validateSelection(cellId, selectedPlayer) {
-    const input = document.querySelector(`#${cellId} input`);
     const correctAnswersForCell = correctAnswers[cellId].map(answer => answer.toLowerCase().trim());
     const playerAnswer = selectedPlayer.toLowerCase().trim();
 
     if (correctAnswersForCell.includes(playerAnswer)) {
-        input.classList.add('correct');
-        input.classList.remove('incorrect');
+        activeCell.classList.add('correct');
+        activeCell.classList.remove('incorrect');
         feedback.textContent = `Cell ${cellId}: Correct! "${selectedPlayer}"`;
     } else {
-        input.classList.add('incorrect');
-        input.classList.remove('correct');
-        feedback.textContent = `Cell ${cellId}: Incorrect. Try again.`;
-    }
-
-    // Check if all cells are filled to display the final score
-    if (document.querySelectorAll('.cell.correct').length + document.querySelectorAll('.cell.incorrect').length === 9) {
-        displayScore();
+        activeCell.classList.add('incorrect');
+        activeCell.classList.remove('correct');
+        feedback.textContent = `Cell ${cellId}: Incorrect`;
     }
 }
 
